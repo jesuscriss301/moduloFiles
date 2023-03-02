@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpaLiquibaseChangesConfig">
+    <exclude-change idName="diseño#fecha_diseño" tagName="addNotNullConstraint" />
+  </component>
+</project>
