@@ -6,6 +6,7 @@ form.addEventListener('submit', function(ev) {
   oData = new FormData(document.forms.namedItem("fileinfo"));
 
   oData.append("ubicacion", "img");
+  oData.append("nombre", form[0].value);
   oData.append("fecha", fecha());
   console.log(fecha());
 

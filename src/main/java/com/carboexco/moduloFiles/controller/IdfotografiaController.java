@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/data/files")
 public class IdfotografiaController {
 
     @Autowired

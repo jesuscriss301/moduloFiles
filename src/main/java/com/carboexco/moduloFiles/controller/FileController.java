@@ -16,7 +16,7 @@ import com.carboexco.moduloFiles.repository.*;
 import com.carboexco.moduloFiles.entity.*;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -39,7 +39,7 @@ public class FileController {
 
     @PostMapping(value = "/api/files")
     @ResponseStatus(HttpStatus.OK)
-    public void handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("ubicacion") String ubicacion,@RequestParam("fecha") String fecha) throws IOException {
+    public void handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("ubicacion") String ubicacion,@RequestParam("nombre") String nombre,@RequestParam("fecha") String fecha) throws IOException {
 
         // Crear una instancia de la fábrica de elementos de archivo de disco
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -53,34 +53,45 @@ public class FileController {
         // Establecer el tamaño máximo permitido para una solicitud completa (opcional)
         upload.setSizeMax(1024 * 1024 * 50); // 50 MB en bytes
 
-        String nombreRamdom= (int)(Math.random()*100000000+1)+ "." + StringUtils.getFilenameExtension(file.getOriginalFilename());
-        idfotografiaRepository.save(new File(nombreRamdom,ubicacion,fecha));
+        File archivo = new File(nombre+"."+StringUtils.getFilenameExtension(file.getOriginalFilename()),ubicacion,fecha);
+        idfotografiaRepository.save(archivo);
+        String str=archivo.getId()+archivo.getNombreArchivo();
         // Almacenar el archivo en el servidor utilizando el objeto fileService
-        fileService.storeFile(file, ubicacion,nombreRamdom);
+        fileService.storeFile(file, ubicacion,str);
     }
 
-    @GetMapping("/files/{ubicacion:.+}/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable String filename, @PathVariable String ubicacion) {
-        Resource file = fileService.loadFile(filename, ubicacion);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-                .body(file);
+    @GetMapping("/files/{id}")
+    public ResponseEntity<Resource> getFile(@PathVariable int id) {
+        Optional<File> idfotografia = idfotografiaRepository.findById(id);
+
+        if (idfotografia.isPresent()) {
+            File data= idfotografia.get();
+            Resource file = fileService.loadFile(data.getId()+data.getNombreArchivo(),data.getDireccionCarpeta());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                    .body(file);
+        }
+        return null;
+
     }
 
-    @GetMapping("/files/view/{ubicacion:.+}/{filename:.+}")
-    @ResponseBody
-    public ResponseEntity<Resource> viewFile(@PathVariable String filename, @PathVariable String ubicacion) {
-        Resource file = fileService.loadFile(filename, ubicacion);
+    @GetMapping("/files/view/{id}")
+    public ResponseEntity<Resource> viewFile(@PathVariable int id) {
+        Optional<File> idfotografia = idfotografiaRepository.findById(id);
 
-        HttpHeaders headers = new HttpHeaders();
+        if (idfotografia.isPresent()) {
+            File data = idfotografia.get();
+            Resource file = fileService.loadFile(data.getId() + data.getNombreArchivo(), data.getDireccionCarpeta());
 
-        headers.add("content-disposition", "inline; filename="+file.getFilename());
-        headers.setContentType(MediaType.parseMediaType("image/jpeg"));
+            HttpHeaders headers = new HttpHeaders();
 
-        ResponseEntity<Resource> response = new ResponseEntity<Resource>(
-                file, headers, HttpStatus.OK);
+            headers.add("content-disposition", "inline; filename=" + file.getFilename());
+            headers.setContentType(MediaType.parseMediaType("image/jpeg"));
 
-        return response;
+            ResponseEntity<Resource> response = new ResponseEntity<Resource>(
+                    file, headers, HttpStatus.OK);
+            return response;
+        }
+        return null;
     }
 }
