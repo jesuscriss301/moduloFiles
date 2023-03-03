@@ -25,7 +25,7 @@ public class SwaggerConfig {
     public Docket apiDocket() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.demo.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.carboexco.moduloFiles.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(getApiInfo())
