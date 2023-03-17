@@ -29,7 +29,7 @@ public class IdfotografiaController {
 
         if (idfotografia.isPresent()) {
             File n= idfotografia.get();
-            return "c:/img/"+n.getId()+n.getDireccionCarpeta()+"/"+n.getNombreArchivo();
+            return "c:/img/"+n.getDireccionCarpeta()+"/"+n.getId()+n.getNombreArchivo();
         }
         return null;
     }
