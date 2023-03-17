@@ -22,6 +22,17 @@ public class IdfotografiaController {
     }
 
 
+    @GetMapping("/direccion/{id}")
+    public String getdireccionServidor(@PathVariable int id) {
+
+        Optional<File> idfotografia = idfotografiaRepository.findById(id);
+
+        if (idfotografia.isPresent()) {
+            File n= idfotografia.get();
+            return "c:/img/"+n.getId()+n.getDireccionCarpeta()+"/"+n.getNombreArchivo();
+        }
+        return null;
+    }
     @GetMapping("/{id}")
     public File getIdfotografiabyId(@PathVariable int id) {
 
