@@ -42,7 +42,7 @@ public class FileController {
 
     @PostMapping(value = "/api/files")
     @ResponseStatus(HttpStatus.OK)
-    public void handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("ubicacion") String ubicacion,@RequestParam("nombre") String nombre,@RequestParam("fecha") String fecha) throws IOException {
+    public int handleFileUpload(@RequestParam("file") MultipartFile file, @RequestParam("ubicacion") String ubicacion, @RequestParam("nombre") String nombre, @RequestParam("fecha") String fecha) throws IOException {
 
         // Crear una instancia de la fábrica de elementos de archivo de disco
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -61,6 +61,7 @@ public class FileController {
         String str=archivo.getId()+archivo.getNombreArchivo();
         // Almacenar el archivo en el servidor utilizando el objeto fileService
         fileService.storeFile(file, ubicacion,str);
+        return archivo.getId();
     }
 
     @GetMapping("/files/{id}")
