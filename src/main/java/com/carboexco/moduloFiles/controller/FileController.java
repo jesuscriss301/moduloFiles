@@ -106,15 +106,15 @@ public class FileController {
         if (idfotografia.isPresent()) {
             File data = idfotografia.get();
             Resource file = fileService.loadFile(data.getId() + data.getNombreArchivo(), data.getDireccionCarpeta());
-            InputStream inputStream = new FileInputStream("C:/img/"+data.getDireccionCarpeta()+"/"+data.getId() + data.getNombreArchivo());
+            InputStream inputStream = new FileInputStream("c/img/"+data.getDireccionCarpeta()+"/"+data.getId() + data.getNombreArchivo());
             InputStreamResource inputStreamResource = new InputStreamResource(inputStream);
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", "inline; filename="+data.getId() + data.getNombreArchivo());
 
             return ResponseEntity.ok()
-                .headers(headers)
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(inputStreamResource);
+                    .headers(headers)
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(inputStreamResource);
         }
         return null;
     }

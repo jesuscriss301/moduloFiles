@@ -16,7 +16,7 @@ import java.nio.file.StandardCopyOption;
 @Component
 public class FileService {
 
-    private static final String FILE_DIRECTORY = "/img";
+    private static final String FILE_DIRECTORY = "/home/sistemas/c/img";
 
     private final Path rootLocation = Paths.get(FILE_DIRECTORY);
 
@@ -33,7 +33,7 @@ public class FileService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("FAIL!");
+                throw new RuntimeException("FAIL! no existe el archivo");
             }
         } catch (MalformedURLException e) {
             throw new RuntimeException("FAIL!");
